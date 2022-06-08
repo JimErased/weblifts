@@ -40,7 +40,7 @@ function plotOneRM(exercise) {
             labels: dates,
             datasets: [
               {
-                label: exercises,
+                label: 'Weight Lifted',
                 fill: false,
                 lineTension: 0.1,
                 backgroundColor: 'rgba(75,192,192,0.4)',
@@ -71,24 +71,53 @@ function plotOneRM(exercise) {
 }
 
 // Set default
-var data = plotOneRM(exercises[0])
-console.log(data)
+const initialState = plotOneRM(exercises[0])
+
+class Graph extends React.Component{
+	componentWillMount(){
+		this.setState(initialState);
+	}
+
+	/* componentDidMount(){
+		var _this = this;
+
+		setInterval(function(){
+			var oldDataSet = _this.state.datasets[0];
+			var newData = [];
+
+			for(var x=0; x< _this.state.labels.length; x++){
+				newData.push(Math.floor(Math.random() * 100));
+			}
+
+			var newDataSet = {
+				...oldDataSet
+			};
+
+			newDataSet.data = newData;
+			newDataSet.backgroundColor = 'red';
+			newDataSet.borderColor = 'blue';
+			newDataSet.hoverBackgroundColor = 'green';
+			newDataSet.hoverBorderColor = 'yellow';
+
+			var newState = {
+				...initialState,
+				datasets: [newDataSet]
+			};
+
+			_this.setState(newState);
+		}, 5000);
+	}
+
+	render() {
+		return (
+			<Line data={this.state} />
+		);
+	} */
+}
+
+
 
 export {plotOneRM, json, exercises}
-export default () => (
-    <div>
-      <h2>{data['exercise']}</h2>
-      <Line
-        data={data}
-        width={1000}
-        height={600}
-        options={{
-            maintainAspectRatio: true,
-            responsive: false
-          }}
-      />
-    </div>
-  );
 
 //TESTING:
 /*
