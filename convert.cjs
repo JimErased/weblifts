@@ -1,7 +1,7 @@
 const csvFilePath='/usb/hdd/Share/hevy/workout_data.csv'
-const jsonFilePath='./weblifts/lifts.json'
+const jsonFilePath='/var/www/jimerased.com/node/weblifts/lifts.json'
 const fs = require('fs');
-const csv=require('csvtojson')
+const csv = require('csvtojson')
 var newJson = {}
 
 csv()
@@ -45,7 +45,7 @@ csv()
             }
         }
 
-        totallifts = i
+        totalLifts = i
     }
 
     var lifts = JSON.stringify(newJson, null, 2)
@@ -55,6 +55,6 @@ csv()
           console.error(err);
         }
         // file written successfully
-        console.log("File updated with " + totaLifts + " lifts")
+        console.log("File updated with " + totalLifts + " lifts")
       });
 })

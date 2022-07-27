@@ -3,6 +3,7 @@ import {Bar} from 'react-chartjs-2'
 import Chart from 'chart.js/auto';
 import React, { useState } from 'react';
 import json from '../lifts.json';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const exercises = Object.keys(json)
 const exerciseCount = []
@@ -11,6 +12,31 @@ for (let i in json) {
   var count = Object.keys(json[i]).length
   exerciseCount.push(count)
 }
+
+// Put all data in key value pairs if it is at least 5 lifts
+const allData = []
+for (let i = 0; i < exerciseCount.length; i++) {
+  if (exerciseCount[i] > 4) {
+    allData.push({
+      exercise: exercises[i],
+      exerciseCount: exerciseCount[i]
+    })
+  }
+}
+
+// Sort by count
+let sortedData = allData.sort((a, b) => b.exerciseCount - a.exerciseCount)
+
+// And split them again
+const sortedExercises = sortedData.map(e => e.exercise);
+const sortedExerciseCount = sortedData.map(e => e.exerciseCount);
+// console.log(allData)
+
+console.log("Sorted Exercises:")
+console.log(sortedExercises)
+console.log("Sorted Count:")
+console.log(sortedExerciseCount)
+
 
 function plotOneRM(exercise) {
   var oneRM = []
@@ -50,36 +76,36 @@ function plotOneRM(exercise) {
       // console.log(dates)
 
       const graphData = {
-          exercise: exercise,
-          labels: dates,
-          datasets: [
-            {
-              label: 'Height Weight Lifted in Exercise',
-              fill: false,
-              lineTension: 0.1,
-              backgroundColor: 'rgba(75,192,192,0.4)',
-              borderColor: 'rgba(75,192,192,1)',
-              borderCapStyle: 'butt',
-              borderDash: [],
-              borderDashOffset: 0.0,
-              borderJoinStyle: 'miter',
-              pointBorderColor: 'rgba(75,192,192,1)',
-              pointBackgroundColor: '#fff',
-              pointBorderWidth: 1,
-              pointHoverRadius: 5,
-              pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-              pointHoverBorderColor: 'rgba(220,220,220,1)',
-              pointHoverBorderWidth: 2,
-              pointRadius: 1,
-              pointHitRadius: 10,
-              data: oneRM
-            }
-          ],
-          options: {
-            hover: {
-              mode: 'x'
-            }
+        exercise: exercise,
+        labels: dates,
+        datasets: [
+          {
+            label: 'Height Weight Lifted in Exercise',
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: 'rgba(75,192,192,0.4)',
+            borderColor: 'rgba(75,192,192,1)',
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: 'rgba(75,192,192,1)',
+            pointBackgroundColor: '#fff',
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+            pointHoverBorderColor: 'rgba(220,220,220,1)',
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: oneRM
           }
+        ],
+        options: {
+          hover: {
+            mode: 'x'
+          }
+        }
       };
       return graphData
   } else {
@@ -90,7 +116,8 @@ function plotOneRM(exercise) {
 }
 
 const data = {
-  labels: exercises,
+  labels: sortedExercises,
+  plugins: [ChartDataLabels],
   datasets: [
     {
       label: 'Number of Lifts',
@@ -99,10 +126,18 @@ const data = {
       borderWidth: 1,
       hoverBackgroundColor: 'rgba(255,0,54,0.4)',
       hoverBorderColor: 'rgb(0,88,101)',
-      data: exerciseCount
+      data: sortedExerciseCount
     },
   ],
   options: {
+    plugins: {
+      datalabels: {
+         display: function(context) {
+            console.log(context)
+            return context.dataset.data[context.dataIndex] > 5; // or >= 1 or ...
+         }
+      }
+    },
     scaleShowValues: true,
     scales: {
       xAxes: [{
@@ -142,7 +177,7 @@ const myBarGraph = new Chart(bar, {
 const ctx = 'myChart'
 const myChart = new Chart(ctx, {
   type: 'line',
-  data: plotOneRM(exercises[0]),
+  data: plotOneRM(sortedExercises[0]),
   options: {
     maintainAspectRatio: false,
     responsive: true
