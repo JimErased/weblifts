@@ -30,13 +30,6 @@ let sortedData = allData.sort((a, b) => b.exerciseCount - a.exerciseCount)
 // And split them again
 const sortedExercises = sortedData.map(e => e.exercise);
 const sortedExerciseCount = sortedData.map(e => e.exerciseCount);
-// console.log(allData)
-
-console.log("Sorted Exercises:")
-console.log(sortedExercises)
-console.log("Sorted Count:")
-console.log(sortedExerciseCount)
-
 
 function plotOneRM(exercise) {
   var oneRM = []
